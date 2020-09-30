@@ -1,8 +1,31 @@
 {% extends 'search/index.html' %}
 {% block body %}
-<div class="container-fluid" style="margin-top:80px;text-align:center">
-    {% if data %}
-    {% for vid in data %}
+{% if data.has_other_pages %}
+<div class="container-fluid" style="margin-top:100px;text-align:center">
+  <ul class="pagination">
+    {% if data.has_previous %}
+      <li><a href="?page={{ data.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in data.paginator.page_range %}
+      {% if data.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+      {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if data.has_next %}
+      <li><a href="?page={{ data.next_page_number }}">&raquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+  </ul>
+{% endif %}
+</div>
+<div class="container-fluid" style="margin-top:100px;text-align:center">
+    {% if result %}
+    {% for vid in result %}
     <iframe width="420" height="345" src={{vid.video_url}}>
     </iframe>
     <h3>{{vid.title}} </h3>
