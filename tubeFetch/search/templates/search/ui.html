@@ -1,0 +1,15 @@
+{% extends 'search/index.html' %}
+{% block body %}
+<div class="container-fluid" style="margin-top:80px;text-align:center">
+    {% if data %}
+    {% for vid in data %}
+    <iframe width="420" height="345" src={{vid.video_url}}>
+    </iframe>
+    <h3>{{vid.title}} </h3>
+    <h3>{{vid.publishedDate}}</h3>
+    <p>{{vid.description}}</p>
+
+{% endfor %}
+{% endif %}
+</div>
+{% endblock %}

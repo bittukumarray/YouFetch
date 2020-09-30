@@ -12,10 +12,12 @@ from rest_framework.response import Response
 import json
 from collections import OrderedDict
 from django.http import HttpResponse, JsonResponse
+from background_task import background
 # Create your views here.
 
-
-def index(request):
+@background(schedule=10)
+def dataFetcher():
+    print("yes")
     now = datetime.now()
     timestamp = datetime.timestamp(now)
     timestamp-=10000
@@ -35,7 +37,8 @@ def index(request):
         except:
             pass
 
-    # print(rqstDataJson)
+
+def index(request):
     return render(request, "search/index.html",)
 
 
@@ -47,7 +50,7 @@ class getVideos(APIView):
         for eachData in data:
             dictData={
                 "title":eachData.title,
-                "video_url":"https://www.youtube.com/watch?v="+eachData.videoId,
+                "video_url":"https://www.youtube.com/embed/"+eachData.videoId,
                 "description":eachData.description,
                 "publishedDate":eachData.publishedDate,
                 "thumb_default_url":eachData.thumb_default_url,
@@ -57,4 +60,18 @@ class getVideos(APIView):
             result.append(dictData)
         return Response({"data":result})
 
-
+def getData(request, page):
+    data = Video.objects.filter().order_by('-publishedDate')[25*page:25*page+25]
+    result=[]
+    for eachData in data:
+        dictData={
+            "title":eachData.title,
+            "video_url":"https://www.youtube.com/embed/"+eachData.videoId,
+            "description":eachData.description,
+            "publishedDate":eachData.publishedDate,
+            "thumb_default_url":eachData.thumb_default_url,
+            "thumb_medium_url":eachData.thumb_medium_url,
+            "thumb_high_url":eachData.thumb_high_url,
+        }
+        result.append(dictData)
+    return render(request, "search/ui.html", {"data":result})

@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+BACKGROUND_TASK_RUN_ASYNC=True
+
 
 # Application definition
 
@@ -39,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'search',
     'rest_framework',
+    'background_task',
 ]
 
 MIDDLEWARE = [
