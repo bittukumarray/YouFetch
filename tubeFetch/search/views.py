@@ -7,6 +7,11 @@ from datetime import datetime
 from pyrfc3339 import generate, parse
 from datetime import datetime
 import pytz
+from rest_framework.views import APIView
+from rest_framework.response import Response
+import json
+from collections import OrderedDict
+from django.http import HttpResponse, JsonResponse
 # Create your views here.
 
 
@@ -16,7 +21,7 @@ def index(request):
     timestamp-=10000
     dt_object = datetime.fromtimestamp(timestamp)
     publishedAfterDate=generate(dt_object.replace(tzinfo=pytz.utc))
-    maxResults=10
+    maxResults=100000
     q="cricket"
     apiKey="AIzaSyB-8rBWOv1G61zFB79z0cmQ1qknLtjzkqw"
     url = 'https://www.googleapis.com/youtube/v3/search?part=snippet&order=date&type=video'
@@ -32,3 +37,24 @@ def index(request):
 
     # print(rqstDataJson)
     return render(request, "search/index.html",)
+
+
+class getVideos(APIView):
+    def get(self, request, page):
+        result=[]
+        
+        data = Video.objects.filter().order_by('-publishedDate')[25*page:25*page+25]
+        for eachData in data:
+            dictData={
+                "title":eachData.title,
+                "video_url":"https://www.youtube.com/watch?v="+eachData.videoId,
+                "description":eachData.description,
+                "publishedDate":eachData.publishedDate,
+                "thumb_default_url":eachData.thumb_default_url,
+                "thumb_medium_url":eachData.thumb_medium_url,
+                "thumb_high_url":eachData.thumb_high_url,
+            }
+            result.append(dictData)
+        return Response({"data":result})
+
+
