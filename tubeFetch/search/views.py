@@ -24,7 +24,7 @@ def dataFetcher():
     publishedAfterDate=generate(dt_object.replace(tzinfo=pytz.utc))
     maxResults=100000
     q="cricket"
-    apiKey="AIzaSyBoOO1vt33UE7_gIOEG2hKCXnaXHpa0KdE"
+    apiKey="AIzaSyD1qMTlkWaB-GlsJMuhFVgQ27CeFK92oi0"
     url = 'https://www.googleapis.com/youtube/v3/search?part=snippet&order=date&type=video'
     full_url=url+"&maxResults="+str(maxResults)+"&q="+str(q)+"&publishedAfter="+publishedAfterDate+"&key="+apiKey
     rqstData = requests.get(full_url)
